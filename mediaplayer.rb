@@ -60,8 +60,8 @@ class MediaPlayer
 	
 	def loadSounds
 		@sonic_eat = Rubygame::Sound['sonic_ring.wav']
-		@sonic_death = Rubygame::Sound['death.wav'] # TODO: Get Sonic death sound
-		@sonic_pause = Rubygame::Sound['mario_pause.wav'] # TODO: Get Sonic pause sound
+		@sonic_death = Rubygame::Sound['sonic_death.wav']
+		@sonic_pause = Rubygame::Sound['sonic_pause.wav']
 		
 		@sonic_sounds = {}
 		@sonic_sounds[:eat] = @sonic_eat
