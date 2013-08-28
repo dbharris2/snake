@@ -3,12 +3,12 @@ class CustomIcon
 	
 	attr_reader :image
 	
-	def initialize(type = :random)
+	def initialize(icon = :random)
 		super()
 		
 		@icons = ['sonic.png', 'mario.gif', 'apple.png']
 		
-		case type
+		case icon
 			when :apple
 				@filename = 'apple.png'
 			when :sonic

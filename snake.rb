@@ -1,5 +1,5 @@
 class Snake
-	attr_reader :segments, :x, :y
+	attr_reader :segments, :x, :y, :head
 	attr_accessor :dead
 	alias_method :dead?, :dead
 
@@ -15,6 +15,9 @@ class Snake
 		@segments = []
 		@x, @y = x, y
 		@dead = false
+		
+		@characters = [:mario, :sonic]
+		@head = CustomIcon.new(:mario)
 		
 		changeDirection(:right)
 		
@@ -59,5 +62,11 @@ class Snake
 		@segments.pop # Remove tail
 		
 		@x, @y = new_head.x, new_head.y
+	end
+	
+	def newCharacter
+		character = @characters[rand(@characters.size)]
+		@head = CustomIcon.new(character)
+		character
 	end
 end

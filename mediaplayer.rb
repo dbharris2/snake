@@ -17,25 +17,21 @@ class MediaPlayer
 		@curr_music.pause unless @curr_music.nil?
 	end
 	
-	def playMusic(music)
-		case music
+	def playMusic(who)
+		case who
 			when :sonic
 				@curr_music = @sonic_music.play(:repeats => -1)
-			when :contra
-				@curr_music = @contra_music.play(:repeats => -1)
 			when :mario
 				@curr_music = @mario_music.play(:repeats => -1)
 		end
 	end
 	
-	def playSound(sound)
-		case sound
-			when :ring
-				@mario_coin.play
-			when :death
-				@mario_death.play
-			when :pause
-				@mario_pause.play
+	def playSound(who, what)		
+		case who
+			when :mario
+				@mario_sounds[what].play
+			when :sonic
+				@sonic_sounds[what].play
 		end
 	end
 	
@@ -63,11 +59,22 @@ class MediaPlayer
 	end
 	
 	def loadSounds
-		@ring_sound = Rubygame::Sound['sonic_ring.wav']
-		@death_sound = Rubygame::Sound['death.wav']
+		@sonic_eat = Rubygame::Sound['sonic_ring.wav']
+		@sonic_death = Rubygame::Sound['death.wav'] # TODO: Get Sonic death sound
+		@sonic_pause = Rubygame::Sound['mario_pause.wav'] # TODO: Get Sonic pause sound
+		
+		@sonic_sounds = {}
+		@sonic_sounds[:eat] = @sonic_eat
+		@sonic_sounds[:pause] = @sonic_pause
+		@sonic_sounds[:death] = @sonic_death
 		
 		@mario_coin = Rubygame::Sound['mario_coin.wav']
 		@mario_death = Rubygame::Sound['mario_death.wav']
 		@mario_pause = Rubygame::Sound['mario_pause.wav']
+		
+		@mario_sounds = {}
+		@mario_sounds[:eat] = @mario_coin
+		@mario_sounds[:pause] = @mario_pause
+		@mario_sounds[:death] = @mario_death
 	end
 end

@@ -19,16 +19,17 @@ class Game
 		point_size = 16
 		@font = Rubygame::TTF.new('arial.ttf', point_size)
 		
-		@snake_head = CustomIcon.new(:mario)
 		@high_scores = ScoreKeeper.loadScores		
-		
-		@media_player = MediaPlayer.new
-		@media_player.playMusic(:mario)		
-		@death_sound_played = false
-		@music_paused = false
 		
 		@max_x = @screen.w/GameItem.cell_size
 		@max_y = @screen.h/GameItem.cell_size
+		
+		@player = :mario
+		@media_player = MediaPlayer.new
+		@media_player.playMusic(@player)
+		
+		@death_sound_played = false
+		@music_paused = false
 		
 		addBrickBorder
 		createSnake
@@ -180,7 +181,7 @@ class Game
 	end
 	
 	def drawSnakeHead
-		drawSurfaceAt(@snake_head.image, @snake.x * GameItem.cell_size, @snake.y * GameItem.cell_size)
+		drawSurfaceAt(@snake.head.image, @snake.x * GameItem.cell_size, @snake.y * GameItem.cell_size)
 	end
 	
 	def handleCollisions
@@ -188,10 +189,10 @@ class Game
 		
 		if @snake.dead?			
 			@media_player.stopMusic
-			@media_player.playSound(:death) unless @death_sound_played
+			@media_player.playSound(@player, :death) unless @death_sound_played
 			@death_sound_played = true
 		elsif ate_food?
-			@media_player.playSound(:ring)
+			@media_player.playSound(@player, :eat)
 			@snake.add_element
 			@score += 10
 			createFood
@@ -218,7 +219,7 @@ class Game
 							exit
 						when :p
 							@paused = !@paused
-							@media_player.playSound(:pause) if @paused
+							@media_player.playSound(@player, :pause) if @paused
 						when :s
 							if @draw_type == :circle
 								@draw_type = :solid_circle
@@ -240,7 +241,8 @@ class Game
 								@draw_type = :solid_circle
 							end
 						when :l
-							@snake_head = CustomIcon.new
+							@player = @snake.newCharacter
+							@media_player.playMusic(@player)
 						when :m
 							@media_player.paused? ? @media_player.unpauseMusic : @media_player.pauseMusic
 							@music_paused = @media_player.paused?
