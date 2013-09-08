@@ -164,8 +164,14 @@ class Game
 		drawSurfaceRelativeTo(text_surface, rect, @screen.w/2 - rect.width/2,  @screen.h/2 - rect.height/2)
 	end
 	
-	def drawFood		
-		food_icon = CustomIcon.new(:apple)
+	def drawFood
+		case @player
+			when :mario
+				food_icon = CustomIcon.new(:mario_coin)
+			when :sonic
+				food_icon = CustomIcon.new(:sonic_ring)
+		end
+		
 		drawSurfaceAt(food_icon.image, @food.x * GameItem.cell_size, @food.y * GameItem.cell_size)
 	end
 	
@@ -264,7 +270,7 @@ class Game
 						when :l
 							if @mode == :menu
 								@player = @snake.newCharacter
-								@media_player.playMusic(@player)
+								@media_player.playMusic(@player) #TODO: unless @music_paused
 							end
 						when :b
 							@mode = :in_game if @mode == :menu

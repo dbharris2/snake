@@ -6,15 +6,17 @@ class CustomIcon
 	def initialize(icon = :random)
 		super()
 		
-		@icons = ['sonic.png', 'mario.gif', 'apple.png']
+		@icons = ['sonic.png', 'mario.gif', 'mario_coin.png', 'sonic_ring.png']
 		
 		case icon
-			when :apple
-				@filename = 'apple.png'
 			when :sonic
 				@filename = 'sonic.png'
+			when :sonic_ring
+				@filename = 'sonic_ring.png'
 			when :mario
 				@filename = 'mario.gif'
+			when :mario_coin
+				@filename = 'mario_coin.png'
 			else
 				@filename = randomIcon
 		end
