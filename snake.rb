@@ -11,13 +11,14 @@ class Snake
 		end
 	end
 
-	def initialize(x, y)
+	def initialize(x, y, character = :mario)
 		@segments = []
 		@x, @y = x, y
 		@dead = false
 		
 		@characters = [:mario, :sonic]
-		@head = CustomIcon.new(:mario)
+		@character = character
+		@head = CustomIcon.new(@character)
 		
 		changeDirection(:right)
 		
@@ -65,8 +66,8 @@ class Snake
 	end
 	
 	def newCharacter
-		character = @characters[rand(@characters.size)]
-		@head = CustomIcon.new(character)
-		character
+		@character = @characters[(@characters.index(@character) + 1) % @characters.size]
+		@head = CustomIcon.new(@character)
+		@character
 	end
 end

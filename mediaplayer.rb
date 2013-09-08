@@ -53,7 +53,6 @@ class MediaPlayer
 	
 	private
 	def loadMusic
-		@contra_music = Rubygame::Music['contra_jungle.mp3']
 		@sonic_music = Rubygame::Music['sonic.mp3']
 		@mario_music = Rubygame::Music['mario_music.mp3']
 	end

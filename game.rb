@@ -31,6 +31,8 @@ class Game
 		@death_sound_played = false
 		@music_paused = false
 		
+		@mode = :menu
+		
 		addBrickBorder
 		createSnake
 		createFood
@@ -98,24 +100,27 @@ class Game
 	end
 	
 	def createSnake
-		@snake = Snake.new(@max_x/2, @max_y/2)
+		@snake = Snake.new(@max_x/2, @max_y/2, @player)
 	end
  
 	def draw
 		@screen.fill(:black)
 	
 		drawBricks
-		drawFood
-		drawScore
 		
-		@snake.move unless @snake.dead? or @paused
-		drawSnake
-		
-		drawSnakeHead
-		
-		handleCollisions
-		drawGameOverText if @snake.dead?
-		drawHighScoreText if (@snake.dead? and @high_scores.highestScore?(@score))
+		if @mode == :menu
+			drawStartScreen
+		else
+			drawFood
+			drawScore
+			
+			@snake.move unless @snake.dead? or @paused
+			drawSnake
+			
+			handleCollisions
+			drawGameOverText if @snake.dead?
+			drawHighScoreText if (@snake.dead? and @high_scores.highestScore?(@score))
+		end
 		
 		@screen.update
 	end
@@ -164,6 +169,20 @@ class Game
 		drawSurfaceAt(food_icon.image, @food.x * GameItem.cell_size, @food.y * GameItem.cell_size)
 	end
 	
+	def drawStartScreen
+		text_surface = @font.render_utf8("Snake!", smooth = true, Rubygame::Color[:white])
+		rect = text_surface.make_rect
+		drawSurfaceRelativeTo(text_surface, rect, @screen.w/2 - rect.width/2,  @screen.h/2 - rect.height/2)
+		
+		text_surface = @font.render_utf8("Start Game", smooth = true, Rubygame::Color[:white])
+		rect = text_surface.make_rect
+		x = @screen.w/2 - rect.width/2
+		y = @screen.h - 100
+		drawSurfaceRelativeTo(text_surface, rect, x,  y)
+		
+		drawSurfaceAt(@snake.head.image, x - GameItem.cell_size, y)
+	end
+	
 	def drawSurfaceAt(surface, topleft_x, topleft_y)
 		rect = surface.make_rect
 		drawSurfaceRelativeTo(surface, rect, topleft_x, topleft_y)
@@ -178,6 +197,8 @@ class Game
 		@snake.segments.each do |segment|
 			drawBox(segment) unless segment == @snake.first
 		end
+		
+		drawSnakeHead
 	end
 	
 	def drawSnakeHead
@@ -241,8 +262,12 @@ class Game
 								@draw_type = :solid_circle
 							end
 						when :l
-							@player = @snake.newCharacter
-							@media_player.playMusic(@player)
+							if @mode == :menu
+								@player = @snake.newCharacter
+								@media_player.playMusic(@player)
+							end
+						when :b
+							@mode = :in_game if @mode == :menu
 						when :m
 							@media_player.paused? ? @media_player.unpauseMusic : @media_player.pauseMusic
 							@music_paused = @media_player.paused?

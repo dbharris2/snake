@@ -30,7 +30,8 @@ class ScoreKeeper < Array
 	
 	def writeScores		
 		File.open(@@Filename, 'w') do |f|
-			f.write(self.join("\n"))
+			num_scores = self.size >= 10 ? 10 : self.size
+			f.write(self[0...num_scores].join("\n"))
 		end
 	end
 
